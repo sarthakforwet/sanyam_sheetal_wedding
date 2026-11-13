@@ -24,7 +24,6 @@ export function apiRoutes(app, deps) {
       try {
         const { text } = await askConcierge({
           config, env, now: now(), knowledge, messages,
-          guest: req.guest,
         });
         res.json({ text });
       } catch (err) {

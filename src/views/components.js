@@ -14,14 +14,6 @@ export const pageHead = (title, intro, { eyebrow = '' } = {}) => html`
   ${intro ? html`<p class="lede">${intro}</p>` : ''}
 </header>`;
 
-export const signInNeeded = (c) => html`
-<section class="card notice center">
-  ${icon('ticket', 'icon icon-lg')}
-  <h2>${c.t('sign_in_needed_title')}</h2>
-  <p>${c.t('sign_in_needed')}</p>
-  <p><a class="btn btn-ghost" href="${whatsappLink(c)}" target="_blank" rel="noopener">${icon('whatsapp')} ${c.t('whatsapp_coordinator', { name: c.tr(c.config.coordinator.name) })}</a></p>
-</section>`;
-
 // Darken an event colour until white text on it (and it on cream) meets WCAG AA 4.5:1
 const lum = (hex) => {
   const [r, g, b] = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255).map((c) => (c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4));
@@ -81,18 +73,6 @@ export function eventCard(c, ev, { compact = false } = {}) {
 </article>`;
 }
 
-export function announcementList(c, items) {
-  if (!items.length) return '';
-  return html`
-<section class="announcements" aria-labelledby="ann-title">
-  <h2 id="ann-title" class="sr-only">${c.t('announcements')}</h2>
-  ${items.map((a) => html`<article class="announcement ${a.pinned ? 'pinned' : ''}">
-    <h3>${c.tr(a.title)}</h3>
-    <p>${c.tr(a.body)}</p>
-  </article>`)}
-</section>`;
-}
-
 // Pastel Carnival mood board: four textured swatch tiles + who wears what
 export function moodBoard(c, dress) {
   const { t, tr } = c;
@@ -132,11 +112,9 @@ export function contactsCard(c) {
 </div>`;
 }
 
-export const flash = (msg, kind = 'ok') => (msg ? html`<p class="flash flash-${kind}" role="status">${msg}</p>` : '');
 
 export const avatar = (name, photo) =>
   photo
     ? html`<img class="avatar" src="${photo}" alt="" loading="lazy" decoding="async" width="96" height="96">`
     : html`<span class="avatar avatar-mono" aria-hidden="true">${[...name.replace(/^(Dr\.|डॉ\.|Shri|Smt\.|श्री|श्रीमती)\s*/, '')][0]}</span>`;
 
-export const whatsappLink = (c) => `https://wa.me/${c.config.coordinator.whatsapp.replace(/\D/g, '')}`;

@@ -40,7 +40,7 @@ export function eventsPage(c, { events }) {
   const { t } = c;
   const body = html`
 <div class="container">
-  ${pageHead(c.guest ? t('your_events') : t('all_events'), c.guest ? '' : t('public_events_note'))}
+  ${pageHead(t('all_events'))}
 </div>
 ${programmeCard(c, events)}
 <div class="container">
@@ -92,7 +92,7 @@ export function stylePage(c, { events }) {
     <p>${tr(config.weather.typical.note)}</p>
   </section>
 
-  <section class="card packing" aria-labelledby="pack-title" data-packing="${c.guest ? c.guest.id : 'public'}">
+  <section class="card packing" aria-labelledby="pack-title" data-packing="v1">
     <h2 id="pack-title">${t('packing_title')}</h2>
     <p class="muted">${t('packing_intro')}</p>
     <fieldset class="seg">
@@ -115,24 +115,10 @@ export function stylePage(c, { events }) {
 }
 
 export function travelPage(c) {
-  const { t, tr, config, guest } = c;
-  const stay = guest?.stay;
+  const { t, tr, config } = c;
   const body = html`
 <div class="container">
   ${pageHead(t('travel_title'))}
-  ${guest ? html`
-  <section class="card stay" aria-labelledby="stay-title">
-    <h2 id="stay-title">${icon('home')} ${t('your_stay')}</h2>
-    ${stay?.hotel ? html`
-      <p class="stay-hotel">${stay.hotel}</p>
-      <dl class="kv">
-        <div><dt>${t('room')}</dt><dd>${stay.room || t('room_pending')}</dd></div>
-        ${stay.checkIn ? html`<div><dt>${t('check_in')}</dt><dd>${stay.checkIn}</dd></div>` : ''}
-        ${stay.checkOut ? html`<div><dt>${t('check_out')}</dt><dd>${stay.checkOut}</dd></div>` : ''}
-      </dl>
-      ${guest.transportNote ? html`<p class="note">${guest.transportNote}</p>` : ''}`
-      : html`<p class="muted">${t('room_pending')}</p>`}
-  </section>` : ''}
   ${config.travel.sections.map((s) => html`<section class="card" aria-labelledby="tr-${s.id}"><h2 id="tr-${s.id}">${tr(s.title)}</h2><p>${tr(s.body)}</p></section>`)}
   <section aria-labelledby="faq-title">
     <h2 id="faq-title" class="sec-title">${t('faq')}</h2>

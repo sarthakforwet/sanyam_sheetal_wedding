@@ -1,8 +1,8 @@
-// Story, families, and the public check-in landing page.
+// Story and families.
 
 import { html, raw } from '../../lib/html.js';
 import { layout } from '../layout.js';
-import { icon, mandala } from '../motifs.js';
+import { icon } from '../motifs.js';
 import { pageHead, avatar, contactsCard } from '../components.js';
 
 export function storyPage(c) {
@@ -66,14 +66,4 @@ export function familyPage(c) {
   </section>
 </div>`;
   return layout(c, { body, page: 'family', title: t('family_title') });
-}
-
-export function checkinPublicPage(c) {
-  const { t, tr, config } = c;
-  const body = html`<div class="container narrow center">
-    ${mandala('small-mandala')}
-    ${pageHead(t('checkin_title'), t('checkin_public', { names: tr(config.couple.names) }))}
-    <p><a class="btn btn-primary" href="/admin/login?next=${encodeURIComponent(c.path)}">${t('staff_sign_in')}</a></p>
-  </div>`;
-  return layout(c, { body, page: 'checkin', title: t('checkin_title'), noindex: true });
 }

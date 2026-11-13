@@ -25,10 +25,10 @@ export function securityHeaders({ https = false } = {}) {
       ].join('; '),
     );
     res.setHeader('X-Content-Type-Options', 'nosniff');
-    // Guest links carry a token in the path; never leak URLs cross-origin
+    // Keep full page URLs to ourselves when following outbound links
     res.setHeader('Referrer-Policy', 'same-origin');
     res.setHeader('X-Frame-Options', 'DENY');
-    res.setHeader('Permissions-Policy', 'camera=(self), microphone=(self), geolocation=(), payment=()');
+    res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=(), payment=()');
     res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
     if (https) res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
     next();
@@ -76,10 +76,10 @@ export function createRateLimiter({ now = () => Date.now() } = {}) {
     return { ok: entry.count <= limit, retryAfter: Math.ceil((entry.reset - t) / 1000) };
   }
 
-  // Express middleware; `scope` names the bucket, keyed per guest when signed in, else per IP
+  // Express middleware; `scope` names the bucket, keyed per client IP
   function limit(scope, max, windowMs) {
     return (req, res, next) => {
-      const who = req.guest ? `g:${req.guest.id}` : `ip:${req.ip}`;
+      const who = `ip:${req.ip}`;
       const r = take(`${scope}:${who}`, max, windowMs);
       if (r.ok) return next();
       res.setHeader('Retry-After', String(r.retryAfter));

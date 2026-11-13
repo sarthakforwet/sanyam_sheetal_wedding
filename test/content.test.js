@@ -60,10 +60,9 @@ test('ICS output is valid-looking and folded', () => {
 test('every page renders in both languages without leaking raw keys', async () => {
   const t = await startApp();
   try {
-    const cookie = await t.loginGuest(t.guest('Joshi family'));
     for (const lang of ['en', 'hi']) {
-      for (const p of ['/', '/events', '/style', '/travel', '/story', '/family', '/pass']) {
-        const res = await t.request(p, { cookie: `${cookie}; lang=${lang}` });
+      for (const p of ['/', '/events', '/style', '/travel', '/story', '/family']) {
+        const res = await t.request(p, { cookie: `lang=${lang}` });
         assert.equal(res.status, 200, `${lang} ${p}`);
         const html = (await res.text()).replace(/<script type="application\/json"[\s\S]*?<\/script>/, '');
         assert.match(html, new RegExp(`<html lang="${lang}"`));
@@ -73,7 +72,7 @@ test('every page renders in both languages without leaking raw keys', async () =
       }
     }
     t.clock.now = AFTER_WEDDING;
-    assert.match(await (await t.request('/', { cookie })).text(), /page-thankyou/);
+    assert.match(await (await t.request('/')).text(), /page-thankyou/);
   } finally {
     await t.close();
   }

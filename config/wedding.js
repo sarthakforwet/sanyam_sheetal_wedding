@@ -36,8 +36,8 @@ export default {
   languages: ['en', 'hi'],
   defaultLanguage: 'en',
 
-  // Whether public (non-guest) pages may be indexed by search engines.
-  // Guest/personal pages are ALWAYS noindex regardless of this flag.
+  // Whether search engines may index the site. Off by default: guests reach it
+  // through the shared link, and a family wedding site is best kept out of search.
   indexable: false,
 
   // The event the hero countdown points at
@@ -109,7 +109,6 @@ export default {
   events: [
     {
       id: 'haldi',
-      public: false,
       name: { en: 'Haldi Carnival', hi: 'हल्दी कार्निवल' },
       tagline: { en: 'Haldi with colour and carnival fun', hi: 'रंग और कार्निवल की मस्ती के साथ हल्दी' },
       start: at('2026-12-02', '09:00'),
@@ -125,7 +124,6 @@ export default {
     },
     {
       id: 'sagai',
-      public: false,
       name: { en: 'Sagai Tika', hi: 'सगाई टीका' },
       tagline: { en: 'Engagement ceremony', hi: 'सगाई की रस्म' },
       start: at('2026-12-02', '13:00'),
@@ -141,7 +139,6 @@ export default {
     },
     {
       id: 'chaak',
-      public: false,
       name: { en: 'Chaak', hi: 'चाक' },
       tagline: { en: 'Chaak ceremony', hi: 'चाक पूजन' },
       start: at('2026-12-02', '15:00'),
@@ -157,7 +154,6 @@ export default {
     },
     {
       id: 'bhaat',
-      public: false,
       name: { en: 'Bhaat', hi: 'भात' },
       tagline: { en: 'Bhaat ceremony', hi: 'भात की रस्म' },
       start: at('2026-12-02', '16:00'),
@@ -173,7 +169,6 @@ export default {
     },
     {
       id: 'sangeet',
-      public: false,
       name: { en: 'Sangeet Night', hi: 'संगीत संध्या' },
       tagline: { en: 'An evening of music and dance', hi: 'संगीत और नृत्य की शाम' },
       start: at('2026-12-02', '19:00'),
@@ -189,7 +184,6 @@ export default {
     },
     {
       id: 'baraat',
-      public: false,
       name: { en: 'Baraat', hi: 'बारात' },
       tagline: { en: 'Wedding procession', hi: 'वर-यात्रा' },
       start: at('2026-12-03', '09:00'),
@@ -205,7 +199,6 @@ export default {
     },
     {
       id: 'reception',
-      public: true,
       name: { en: 'Reception & Dinner', hi: 'रिसेप्शन और रात्रिभोज' },
       tagline: { en: 'From 7 PM onwards', hi: 'शाम 7 बजे से' },
       start: at('2026-12-03', '19:00'),
@@ -257,8 +250,8 @@ export default {
         id: 'stay',
         title: { en: 'Where you’re staying', hi: 'ठहरने की व्यवस्था' },
         body: {
-          en: 'If the family has arranged a room for you, its details appear on your personal page.',
-          hi: 'यदि परिवार ने आपके लिए कमरे की व्यवस्था की है, तो उसकी जानकारी आपके निजी पेज पर दिखेगी।',
+          en: 'If you need a room, please WhatsApp the family and they will share the details of your stay.',
+          hi: 'यदि आपको ठहरने की व्यवस्था चाहिए, तो कृपया परिवार को WhatsApp करें, वे आपके ठहरने की जानकारी साझा करेंगे।',
         },
       },
       {
@@ -355,7 +348,4 @@ export default {
     },
   },
 
-  // Allowed values for guest targeting (announcements, admin filters)
-  sides: ['bride', 'groom', 'both'],
-  groups: ['family', 'friends', 'colleagues', 'outstation', 'elders', 'vip'],
 };

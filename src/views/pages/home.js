@@ -1,7 +1,7 @@
 import { html, raw } from '../../lib/html.js';
 import { layout, shareUrl } from '../layout.js';
 import { icon, mandala, seal, diya, divider } from '../motifs.js';
-import { announcementList, pageHead, eventStyle, contactsCard } from '../components.js';
+import { pageHead, eventStyle, contactsCard } from '../components.js';
 import { programmeCard } from './info.js';
 
 function countdownParts(target, now) {
@@ -20,7 +20,7 @@ function envelope(c) {
 <div class="invite-overlay" id="invite" role="dialog" aria-modal="true" aria-label="${t('open_invite')}">
   <div class="curtain l" aria-hidden="true"></div><div class="curtain r" aria-hidden="true"></div>
   <div class="invite-inner">
-    <p class="caps env-caps">${c.guest ? t('dear', { name: c.guest.name }) : t('you_are_invited')}</p>
+    <p class="caps env-caps">${t('you_are_invited')}</p>
     <div class="envelope">
       <div class="env-back"></div>
       <div class="env-clip"><div class="env-letter">
@@ -56,7 +56,6 @@ function hero(c) {
       <h1 id="hero-title" class="hero-names"><span class="n1">${tr(config.couple.partner1)}</span><span class="amp">&amp;</span><span class="n2">${tr(config.couple.partner2)}</span></h1>
     </div>
     <div class="hero-bottom">
-      ${c.guest ? html`<p class="hero-dear">${t('dear', { name: c.guest.name })}</p>` : ''}
       <p class="hero-invite">${t('hero_invite')}</p>
       <p class="hero-date">${tr(config.dateRange)}</p>
       <p class="hero-venue">${tr(config.venues[c.mainEvent.venue].name)}, ${tr(config.city)}</p>
@@ -80,7 +79,7 @@ function countdown(c) {
   <p class="hero-tag">${c.config.hashtag}</p>
   <div class="hero-actions">
     <a class="btn btn-primary" href="/events">${icon('calendar')}<span>${t('all_events')}</span></a>
-    ${c.guest ? html`<a class="btn btn-ghost" href="/pass">${icon('ticket')}<span>${t('nav_pass')}</span></a>` : ''}
+    <a class="btn btn-ghost" href="/style">${icon('style')}<span>${t('nav_style')}</span></a>
   </div>
   <button type="button" class="link-btn replay-invite" hidden>${t('replay_invite')}</button>
 </section>`;
@@ -129,11 +128,11 @@ function finale(c) {
 </div>`;
 }
 
-export function homePage(c, { events, announcements, liveEvent, upNext }) {
+export function homePage(c, { events, liveEvent, upNext }) {
   const { t, tr } = c;
   const links = [
     ['/style', 'nav_style', 'style'], ['/travel', 'nav_travel', 'plane'], ['/story', 'nav_story', 'heart'],
-    ['/family', 'nav_family', 'family'], c.guest && ['/pass', 'nav_pass', 'ticket'],
+    ['/family', 'nav_family', 'family'],
   ].filter(Boolean);
 
   const body = html`
@@ -143,8 +142,6 @@ ${c.mode === 'upcoming' ? countdown(c) : ''}
 <div class="container">
   ${liveEvent ? html`<p class="live-banner" ${eventStyle(liveEvent)}>${icon(liveEvent.icon)} ${t('happening_now', { event: tr(liveEvent.name) })}</p>`
     : upNext && c.mode === 'live' ? html`<p class="live-banner" ${eventStyle(upNext)}>${icon(upNext.icon)} ${t('up_next', { event: tr(upNext.name) })}</p>` : ''}
-  ${announcementList(c, announcements)}
-  ${!c.guest ? html`<p class="note">${t('public_events_note')}</p>` : ''}
 </div>
 ${programmeCard(c, events, { link: true })}
 ${venueBlock(c)}

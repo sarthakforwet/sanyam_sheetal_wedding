@@ -18,11 +18,9 @@ const CLIENT_KEYS = [
 ];
 
 export function navItems(c) {
-  const g = !!c.guest;
   const all = [
     { href: '/', key: 'nav_home', icon: 'home' },
     { href: '/events', key: 'nav_events', icon: 'calendar' },
-    g && { href: '/pass', key: 'nav_pass', icon: 'ticket' },
     { href: '/style', key: 'nav_style', icon: 'style' },
     { href: '/travel', key: 'nav_travel', icon: 'plane' },
     { href: '/story', key: 'nav_story', icon: 'heart' },
@@ -47,10 +45,8 @@ export function layout(c, { title, body, page = '', noindex = false, description
   const names = tr(config.couple.names);
   const fullTitle = title ? `${title} · ${names}` : `${names} · ${config.hashtag}`;
   const desc = description || `${tr(config.dateRange)} · ${tr(config.city)} · ${config.hashtag}`;
-  const robots = noindex || !config.indexable || c.guest ? 'noindex, nofollow' : 'index, follow';
-  const bottom = c.guest
-    ? [['/', 'nav_home', 'home'], ['/events', 'nav_events', 'calendar'], ['/pass', 'nav_pass', 'ticket'], ['/story', 'nav_story', 'heart']]
-    : [['/', 'nav_home', 'home'], ['/events', 'nav_events', 'calendar'], ['/story', 'nav_story', 'heart'], ['/family', 'nav_family', 'family']];
+  const robots = noindex || !config.indexable ? 'noindex, nofollow' : 'index, follow';
+  const bottom = [['/', 'nav_home', 'home'], ['/events', 'nav_events', 'calendar'], ['/story', 'nav_story', 'heart'], ['/family', 'nav_family', 'family']];
   const isCurrent = (href) => (href === '/' ? c.path === '/' : c.path.startsWith(href));
   const otherLang = lang === 'en' ? 'hi' : 'en';
   const strings = Object.fromEntries(CLIENT_KEYS.map((k) => [k, t(k)]));
@@ -108,7 +104,6 @@ ${body}
   <p class="footer-names">${names}</p>
   <p class="footer-tag">${config.hashtag}</p>
   <p><a class="btn btn-whatsapp" href="${shareUrl(c)}" target="_blank" rel="noopener">${icon('whatsapp')}<span>${t('share_whatsapp')}</span></a></p>
-  ${c.guest ? html`<p class="footer-small">${t('privacy_note')} · <a href="/logout">${t('nav_signout')}</a></p>` : ''}
   <p class="footer-small">${t('made_with_love')}</p>
 </footer>
 
@@ -140,7 +135,7 @@ function conciergeWidget(c) {
       <p class="msg msg-bot">${t('concierge_hello')}</p>
     </div>
     <div class="concierge-suggest">
-      ${['concierge_suggest_1', 'concierge_suggest_2', ...(c.guest ? ['concierge_suggest_3'] : [])].map((k) => html`<button type="button" class="chip" data-suggest>${t(k)}</button>`)}
+      ${['concierge_suggest_1', 'concierge_suggest_2'].map((k) => html`<button type="button" class="chip" data-suggest>${t(k)}</button>`)}
     </div>
     <form class="concierge-form" autocomplete="off">
       <label class="sr-only" for="concierge-input">${t('concierge_placeholder')}</label>

@@ -336,79 +336,6 @@
     }));
   }
 
-  // ── Downloadable pass image, drawn in the browser (the page's own fonts) ──
-  function initPassDownload() {
-    const btn = $('[data-pass-download]');
-    const dataEl = $('#pass-data');
-    const qrSvg = $('.pass-qr svg');
-    if (!btn || !dataEl || !qrSvg) return;
-    let d;
-    try { d = JSON.parse(dataEl.textContent); } catch { return; }
-    btn.hidden = false;
-
-    const W = 900;
-    const font = (w, size, family) => `${w} ${size}px ${family}`;
-    const css = getComputedStyle(root);
-    const head = css.getPropertyValue('--head').trim() || 'Georgia, serif';
-    const body = css.getPropertyValue('--body').trim() || 'Arial, sans-serif';
-    const fit = (ctx, text, max) => { let s = text; while (s.length > 3 && ctx.measureText(s).width > max) s = s.slice(0, -2); return s === text ? s : `${s}…`; };
-
-    btn.addEventListener('click', async () => {
-      btn.disabled = true;
-      try {
-        await document.fonts?.ready;
-        const H = 1170 + d.events.length * 56 + (d.room ? 40 : 0);
-        const canvas = document.createElement('canvas');
-        canvas.width = W; canvas.height = H;
-        const ctx = canvas.getContext('2d');
-        // card + gold frame
-        ctx.fillStyle = '#F5EBD9'; ctx.fillRect(0, 0, W, H);
-        ctx.strokeStyle = '#A87E36'; ctx.lineWidth = 3; ctx.strokeRect(18, 18, W - 36, H - 36);
-        // wine header
-        ctx.fillStyle = '#5B0A12'; ctx.fillRect(18, 18, W - 36, 240);
-        const grad = ctx.createLinearGradient(0, 70, 0, 150);
-        grad.addColorStop(0, '#F3D99B'); grad.addColorStop(0.5, '#D8B56E'); grad.addColorStop(1, '#A87E36');
-        ctx.textAlign = 'center';
-        ctx.fillStyle = grad; ctx.font = font(600, 60, head); ctx.fillText(fit(ctx, d.couple, W - 120), W / 2, 130);
-        ctx.fillStyle = '#F3E6CF'; ctx.font = font(400, 26, body); ctx.fillText(fit(ctx, d.tag, W - 120), W / 2, 195);
-        // QR, rendered from the page's own SVG
-        const svgText = new XMLSerializer().serializeToString(qrSvg);
-        const img = new Image();
-        img.src = URL.createObjectURL(new Blob([svgText], { type: 'image/svg+xml' }));
-        await img.decode();
-        ctx.fillStyle = '#F5EBD9'; ctx.fillRect(W / 2 - 290, 290, 580, 580);
-        ctx.drawImage(img, W / 2 - 280, 300, 560, 560);
-        URL.revokeObjectURL(img.src);
-        // guest
-        let y = 930;
-        ctx.fillStyle = '#9E1622'; ctx.font = font(600, 44, head); ctx.fillText(fit(ctx, d.name, W - 120), W / 2, y);
-        ctx.fillStyle = '#6E3A2A'; ctx.font = font(400, 26, body); ctx.fillText(fit(ctx, d.meta, W - 120), W / 2, (y += 50));
-        if (d.room) ctx.fillText(fit(ctx, d.room, W - 120), W / 2, (y += 40));
-        // functions
-        y += 40;
-        ctx.strokeStyle = '#A87E36'; ctx.setLineDash([6, 6]); ctx.beginPath(); ctx.moveTo(80, y); ctx.lineTo(W - 80, y); ctx.stroke(); ctx.setLineDash([]);
-        for (const ev of d.events) {
-          y += 56;
-          ctx.fillStyle = ev.color; ctx.beginPath(); ctx.arc(92, y - 9, 7, 0, Math.PI * 2); ctx.fill();
-          ctx.textAlign = 'left'; ctx.fillStyle = ev.color; ctx.font = font(600, 28, body); ctx.fillText(fit(ctx, ev.name, 430), 112, y);
-          ctx.textAlign = 'right'; ctx.fillStyle = '#6E3A2A'; ctx.font = font(400, 24, body); ctx.fillText(ev.when, W - 80, y);
-        }
-        ctx.textAlign = 'center'; ctx.fillStyle = '#6E3A2A'; ctx.font = font(400, 22, body); ctx.fillText(fit(ctx, d.footer, W - 120), W / 2, H - 50);
-        const blob = await new Promise((r) => canvas.toBlob(r, 'image/png'));
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = 'wedding-pass.png';
-        document.body.append(a);
-        a.click();
-        setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
-      } catch {
-        /* drawing failed: the tip below suggests a screenshot */
-      } finally {
-        btn.disabled = false;
-      }
-    });
-  }
-
   // ── AI concierge ───────────────────────────────────────────────────────
   function initConcierge() {
     const wrap = $('[data-concierge]');
@@ -482,7 +409,6 @@
     initPacking();
     initWeather();
     initCopy();
-    initPassDownload();
     initConcierge();
   };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', ready);
