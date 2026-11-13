@@ -14,8 +14,10 @@ describe('schedule', () => {
     assert.equal(mainEvent(config).id, 'baraat');
   });
 
-  test('every function uses the wedding-wide dress code unless it sets its own', () => {
-    for (const ev of config.events) assert.equal(dressFor(config, ev), ev.dress || config.dressCode);
+  test('only the Haldi Carnival has a dress code', () => {
+    assert.deepEqual(config.events.filter((ev) => dressFor(config, ev)).map((ev) => ev.id), ['haldi']);
+    assert.equal(dressFor(config, config.events.find((e) => e.id === 'haldi')).title.en, 'Pastel Carnival');
+    assert.equal(config.dressCode, undefined);
   });
 });
 

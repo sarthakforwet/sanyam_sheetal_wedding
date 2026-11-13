@@ -23,8 +23,8 @@ export function nextEvent(events, now = Date.now()) {
 
 export const mainEvent = (config) => config.events.find((e) => e.id === config.mainEventId) || config.events[0];
 
-// An event's dress code: its own, or the wedding-wide one
-export const dressFor = (config, ev) => ev.dress || config.dressCode;
+// An event's dress code, or null when guests can wear whatever they like
+export const dressFor = (config, ev) => ev.dress || null;
 
 // Day-by-day programme: functions plus non-function items (meals), grouped by
 // IST date, chronological.

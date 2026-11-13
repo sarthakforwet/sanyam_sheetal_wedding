@@ -10,7 +10,8 @@ const IST = '+05:30';
 const at = (date, time) => `${date}T${time}:00${IST}`;
 const photo = (n) => ({ src: `/img/photos/p${n}.webp`, thumb: `/img/photos/p${n}-sm.webp` });
 
-// Pastel Carnival — one dress code for the whole celebration
+// Pastel Carnival: the dress code for the Haldi Carnival only. Every other
+// function has no dress code.
 const PASTEL = {
   title: { en: 'Pastel Carnival', hi: 'पेस्टल कार्निवल' },
   note: {
@@ -70,9 +71,10 @@ export default {
     og: '/img/photos/p03.webp',
   },
 
-  // Background music. Leave src empty for the built-in synthesised melody;
-  // put a licensed MP3 in public/audio/ and set src to use a recording.
-  music: { src: '' },
+  // Background music (off until a guest taps the speaker button). Put the
+  // instrumental at this path; if the file is missing, the button plays a soft
+  // built-in tanpura drone instead.
+  music: { src: '/audio/tere-naina-instrumental.mp3' },
 
   // Number behind every "WhatsApp the family" link and the concierge fallback
   coordinator: {
@@ -103,9 +105,6 @@ export default {
     },
   },
 
-  // Single dress code for every function (an event may set its own `dress`)
-  dressCode: PASTEL,
-
   events: [
     {
       id: 'haldi',
@@ -117,6 +116,7 @@ export default {
       color: '#C9962E',
       tint: '#FBF0D6',
       icon: 'haldi',
+      dress: PASTEL,
       ritual: {
         en: 'Family and friends apply a paste of turmeric to the couple as a blessing for a glowing new beginning. Ours comes with colour, music and carnival games, so wear something you don’t mind getting a little yellow!',
         hi: 'परिवार और मित्र दूल्हा-दुल्हन को हल्दी का लेप लगाकर नई शुरुआत का आशीर्वाद देते हैं। हमारी हल्दी में रंग, संगीत और कार्निवल के खेल होंगे, इसलिए ऐसे कपड़े पहनें जिन पर थोड़ा पीला रंग लगने से फ़र्क न पड़े!',
@@ -266,7 +266,7 @@ export default {
     faq: [
       {
         q: { en: 'What should I wear?', hi: 'क्या पहनें?' },
-        a: { en: 'Lavender outfits for women and peach outfits for men.', hi: 'महिलाओं के लिए लैवेंडर और पुरुषों के लिए पीच परिधान।' },
+        a: { en: 'Only the Haldi Carnival has a theme, Pastel Carnival: lavender outfits for women and peach for men. For every other function there’s no dress code, so wear whatever you like.', hi: 'केवल हल्दी कार्निवल की थीम है, पेस्टल कार्निवल: महिलाओं के लिए लैवेंडर और पुरुषों के लिए पीच परिधान। बाक़ी सभी कार्यक्रमों में कोई ड्रेस कोड नहीं है, जो मन करे वो पहनें।' },
       },
       {
         q: { en: 'Is the food vegetarian?', hi: 'क्या भोजन शाकाहारी है?' },

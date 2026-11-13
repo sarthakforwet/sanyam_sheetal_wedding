@@ -53,7 +53,7 @@ export function eventCard(c, ev, { compact = false } = {}) {
   <dl class="event-meta">
     <div><dt>${icon('clock')}<span class="sr-only">${t('when')}</span></dt><dd><strong>${t('from_time', { time: fmtTime(ev.start, lang) })}</strong></dd></div>
     <div><dt>${icon('pin')}<span class="sr-only">${t('where')}</span></dt><dd><strong>${tr(venue.name)}</strong><br><span class="muted">${tr(venue.address)}</span></dd></div>
-    ${compact ? '' : html`<div><dt>${icon('style')}<span class="sr-only">${t('dress_code')}</span></dt><dd><a href="/style">${tr(dress.title)}</a></dd></div>`}
+    ${compact || !dress ? '' : html`<div><dt>${icon('style')}<span class="sr-only">${t('dress_code')}</span></dt><dd>${t('dress_code')}: <a href="/style">${tr(dress.title)}</a></dd></div>`}
   </dl>
   ${compact ? '' : html`
   <details class="ritual">

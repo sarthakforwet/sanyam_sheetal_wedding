@@ -65,6 +65,7 @@ ${programmeCard(c, events)}
 function packingItems(c, ev) {
   const { t, tr, config } = c;
   const dress = dressFor(config, ev);
+  if (!dress) return [];
   return [
     { id: 'outfit-her', who: 'her', text: t('pack_outfit', { item: tr(dress.women) }) },
     { id: 'outfit-him', who: 'him', text: t('pack_outfit', { item: tr(dress.men) }) },
@@ -73,27 +74,26 @@ function packingItems(c, ev) {
 
 export function stylePage(c, { events }) {
   const { t, tr, lang, config } = c;
-  const general = ['pack_shoes_flat', 'pack_shoes_dance', 'pack_accessories', 'pack_shawl', 'pack_id', 'pack_charger', 'pack_meds', 'pack_sunscreen'];
-  const own = events.filter((e) => e.dress);
+  const general = ['pack_other_outfits', 'pack_shoes_flat', 'pack_shoes_dance', 'pack_shawl', 'pack_id', 'pack_charger', 'pack_meds', 'pack_sunscreen'];
+  const themed = events.filter((e) => e.dress);
   const body = html`
 <div class="container">
   ${pageHead(t('nav_style'), t('style_intro'))}
 </div>
-<section class="satin" aria-labelledby="dress-h">
+${themed.map((ev) => html`
+<section class="satin" aria-labelledby="dress-${ev.id}">
   <div class="satin-inner">
-    <h2 class="sec-title" id="dress-h">${tr(config.dressCode.title)}</h2>
-    <p class="sec-sub">${tr(config.dressCode.note)}</p>
-    ${moodBoard(c, config.dressCode)}
-  </div>
-</section>
-<div class="container">
-  ${own.map((ev) => html`
-  <section class="style-block" ${eventStyle(ev)} aria-labelledby="st-${ev.id}">
-    <h2 id="st-${ev.id}" class="style-title">${icon(ev.icon)} ${tr(ev.name)} <small>${fmtDate(ev.start, lang)}</small></h2>
-    <p class="style-sub">${tr(ev.dress.title)}</p>
-    <p>${tr(ev.dress.note)}</p>
+    <p class="caps center">${tr(ev.name)} · ${fmtDate(ev.start, lang)}</p>
+    <h2 class="sec-title" id="dress-${ev.id}">${tr(ev.dress.title)}</h2>
+    <p class="sec-sub">${tr(ev.dress.note)}</p>
     ${moodBoard(c, ev.dress)}
-  </section>`)}
+  </div>
+</section>`)}
+<div class="container">
+  <section class="card center free-dress" aria-labelledby="free-dress">
+    <h2 id="free-dress">${icon('style')} ${t('no_dress_code_title')}</h2>
+    <p>${t('no_dress_code', { events: new Intl.ListFormat(lang === 'hi' ? 'hi' : 'en-IN', { type: 'conjunction' }).format(events.filter((e) => !e.dress).map((e) => tr(e.name))) })}</p>
+  </section>
 
   <section class="card weather" aria-labelledby="wx-title" data-weather>
     <h2 id="wx-title">${t('weather_title', { city: tr(config.city) })}</h2>
@@ -111,7 +111,7 @@ export function stylePage(c, { events }) {
       <legend>${t('packing_for')}</legend>
       ${[['both', 'packing_both'], ['her', 'packing_her'], ['him', 'packing_him']].map(([v, k], i) => html`<label><input type="radio" name="pack-who" value="${v}" ${i === 0 ? 'checked' : ''}><span>${t(k)}</span></label>`)}
     </fieldset>
-    ${events.map((ev) => html`
+    ${themed.map((ev) => html`
     <fieldset class="checklist" ${eventStyle(ev)}>
       <legend>${tr(ev.name)} · ${fmtShortDate(ev.start, lang)}</legend>
       ${packingItems(c, ev).map((it) => html`<label class="check" ${it.who ? html`data-who="${it.who}"` : ''}><input type="checkbox" data-key="${ev.id}:${it.id}"><span>${it.text}</span></label>`)}

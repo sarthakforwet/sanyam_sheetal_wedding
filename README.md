@@ -27,7 +27,7 @@ Requires Node 22 or later.
 - **Invitation intro**: on the first visit the guest taps the gold seal, the curtains part, the flap opens and the family's letter rises. "View the invitation" leads to the photo slideshow and a countdown to the Baraat. It can be skipped, Esc closes it, and it's skipped entirely under reduced motion. "Replay invitation" brings it back.
 - **Home**: the programme ("The Celebrations"), the venue with directions, the "Moments" photo reel, quick links and the "For any queries" phone numbers.
 - **Events**: the programme, plus a card per function with time, venue, directions, Google Calendar / `.ics` and a short explanation of the ritual.
-- **Dress code**: the Pastel Carnival mood board, a weather forecast for the dates, and a packing checklist saved on the guest's phone.
+- **Dress code**: only the Haldi Carnival has a theme (Pastel Carnival: lavender for women, peach for men), shown with a mood board. Every other function has no dress code. Also a weather forecast for the dates and a packing checklist saved on the guest's phone. To give another function a theme, add a `dress` object to it in the config.
 - **Travel & stay**, **Our story**, **Families** (both sets of parents), an English/Hindi switch, background music (off by default), and an optional AI chat assistant.
 - **Thank-you mode**: after the last function ends, `/` becomes a thank-you page with the highlight film, photos, and optionally a link and QR code to the official photos.
 
@@ -40,7 +40,7 @@ All content lives in **`config/wedding.js`**, and every text field there is `{ e
 - **Families**: `families[].members`. Add `photo: '/img/family/name.jpg'` to replace the monogram avatars.
 - **Photos**: in `public/img/photos/` as WebP (full size plus `-sm` thumbnails). `photos` picks the hero slideshow, venue arch, closing photo and the WhatsApp preview photo (`photos.og`; run `npm run og` after changing it). `story.timeline` and `story.gallery` hold the captioned photos.
 - **After the wedding**: set `thankYou.videoEmbed` (e.g. `https://www.youtube-nocookie.com/embed/<id>`) and `thankYou.photosLink.url`.
-- **Music**: drop a licensed MP3 in `public/audio/` and set `music.src`. Without it, a soft synthesised tanpura drone plays when the guest taps the button.
+- **Music**: the speaker button plays `public/audio/tere-naina-instrumental.mp3` (set in `music.src`), looping, only after a guest taps it, and it pauses when they leave the tab. If the file is missing, a soft synthesised tanpura drone plays instead. Use a recording you have the right to use, and keep it small (around 128 kbps; a 3–4 minute track is 3–4 MB).
 
 **Testing time-based behaviour:** set `SIMULATE_NOW=2026-12-03T19:30:00+05:30` in `.env` to see the "happening now" banner, or `2026-12-04T10:00:00+05:30` for thank-you mode.
 

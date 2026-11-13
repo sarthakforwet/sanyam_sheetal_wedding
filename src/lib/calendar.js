@@ -22,11 +22,10 @@ function fold(line) {
 
 function eventDetails(config, ev, tr) {
   const venue = config.venues[ev.venue];
-  const dress = ev.dress || config.dressCode;
   return {
     title: `${tr(ev.name)} · ${tr(config.couple.names)}`,
     location: `${tr(venue.name)}, ${tr(venue.address)}`,
-    description: `${tr(ev.tagline)}\n${tr(dress.title)}: ${tr(dress.note)}\n\n${tr(ev.ritual)}\n\n${config.hashtag}`,
+    description: `${tr(ev.tagline)}\n${ev.dress ? `${tr(ev.dress.title)}: ${tr(ev.dress.note)}\n` : ''}\n${tr(ev.ritual)}\n\n${config.hashtag}`,
   };
 }
 

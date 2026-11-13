@@ -17,14 +17,14 @@ export function buildKnowledge(config) {
   lines.push(`Invitation: ${en(config.invitation.line)} ${en(config.couple.names)}, ${en(config.invitation.hosts)}. ${en(config.invitation.signoff)}.`);
   lines.push(`Help and queries: WhatsApp ${en(config.coordinator.name)} at ${wa(config.coordinator.whatsapp)}. Family phone numbers: ${config.contacts.join(', ')}.`);
   lines.push('There is no RSVP form on this site. Guests with questions about attending should WhatsApp the family.');
-  const d = config.dressCode;
-  lines.push(`DRESS CODE for every function, "${en(d.title)}": ${en(d.note)} Women: ${en(d.women)}. Men: ${en(d.men)}.`);
+  const themed = config.events.filter((e) => e.dress);
+  lines.push(`DRESS CODE: only ${themed.map((e) => `the ${en(e.name)} ("${en(e.dress.title)}": ${en(e.dress.note)} Women: ${en(e.dress.women)}. Men: ${en(e.dress.men)}.)`).join(' and ')} has a theme. Every other function has NO dress code; guests can wear whatever they like.`);
   lines.push('', 'VENUES:');
   for (const v of Object.values(config.venues)) lines.push(`- ${en(v.name)}, ${en(v.address)}. Map: ${v.mapsUrl}`);
   lines.push('', 'FUNCTIONS (all times IST; only start times are announced):');
   for (const ev of config.events) {
     lines.push(`- [${ev.id}] ${en(ev.name)} (${en(ev.tagline)}): ${fmtDate(ev.start)}, from ${fmtTime(ev.start)}. Venue: ${en(config.venues[ev.venue].name)}.`);
-    if (ev.dress) lines.push(`  Dress code "${en(ev.dress.title)}": ${en(ev.dress.note)}`);
+    lines.push(ev.dress ? `  Dress code "${en(ev.dress.title)}": ${en(ev.dress.note)}` : '  Dress code: none, wear whatever you like.');
     lines.push(`  About: ${en(ev.ritual)}`);
   }
   for (const x of config.programmeExtras || []) lines.push(`- ${en(x.name)}: ${fmtDate(x.time)}, ${fmtTime(x.time)}.`);

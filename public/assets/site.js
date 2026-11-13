@@ -121,20 +121,38 @@
       btn.setAttribute('aria-pressed', String(on));
       btn.setAttribute('aria-label', on ? t('music_pause') : t('music_play'));
     };
-    btn.addEventListener('click', async () => {
-      const on = btn.getAttribute('aria-pressed') !== 'true';
+    let playing = false;
+    const start = async () => {
       if (!player) player = btn.dataset.src ? recordedPlayer(btn.dataset.src) : tanpura();
       try {
-        await (on ? player.play() : player.pause());
-        setState(on);
-      } catch { setState(false); }
+        await player.play();
+      } catch (err) {
+        // The recording is missing or won't load: fall back to the built-in drone
+        if (!player.recorded) throw err;
+        player = tanpura();
+        await player.play();
+      }
+    };
+    btn.addEventListener('click', async () => {
+      const on = !playing;
+      try {
+        if (on) await start(); else player?.pause();
+        playing = on;
+      } catch { playing = false; }
+      setState(playing);
+    });
+    // Don't keep playing in a background tab
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden && playing) { player?.pause(); playing = false; setState(false); }
     });
   }
   function recordedPlayer(src) {
-    const a = new Audio(src);
+    const a = new Audio();
+    a.preload = 'none';
     a.loop = true;
-    a.volume = 0.5;
-    return { play: () => a.play(), pause: () => a.pause() };
+    a.volume = 0.45;
+    a.src = src;
+    return { recorded: true, play: () => a.play(), pause: () => a.pause() };
   }
   // A soft, synthesised tanpura-style drone (Pa–Sa–Sa–Sa) — no download needed
   function tanpura() {

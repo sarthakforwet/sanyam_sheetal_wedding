@@ -51,6 +51,22 @@ describe('public site', () => {
     }
   });
 
+  test('the dress code is shown only for the Haldi Carnival', async () => {
+    const events = await (await t.request('/events')).text();
+    const cards = events.split('<article class="event-card').slice(1);
+    for (const card of cards) {
+      const isHaldi = card.includes('id="ev-haldi"');
+      assert.equal(card.includes('Pastel Carnival'), isHaldi, card.slice(0, 60));
+    }
+    const style = await (await t.request('/style')).text();
+    assert.match(style, /Pastel Carnival/);
+    assert.match(style, /No dress code for the other functions/);
+    assert.match(style, /Baraat and Reception &amp; Dinner/);
+    assert.ok(!/data-key="(sagai|chaak|bhaat|sangeet|baraat|reception):outfit/.test(style), 'no outfit items for other functions');
+    // Unfold ICS continuation lines before searching
+    assert.match((await (await t.request('/cal/all.ics')).text()).replace(/\r\n /g, ''), /Pastel Carnival/);
+  });
+
   test('kept out of search engines and framed safely', async () => {
     const res = await t.request('/');
     assert.match(await res.text(), /<meta name="robots" content="noindex, nofollow">/);
