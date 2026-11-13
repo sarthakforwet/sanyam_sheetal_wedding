@@ -16,7 +16,7 @@ export function buildKnowledge(config) {
   lines.push(`WEDDING: ${en(config.couple.names)} (${config.hashtag}), ${en(config.city)}, ${en(config.dateRange)}.`);
   lines.push(`Invitation: ${en(config.invitation.line)} ${en(config.couple.names)}, ${en(config.invitation.hosts)}. ${en(config.invitation.signoff)}.`);
   lines.push(`Help and queries: WhatsApp ${en(config.coordinator.name)} at ${wa(config.coordinator.whatsapp)}. Family phone numbers: ${config.contacts.join(', ')}.`);
-  lines.push('There is no RSVP form on this site. Guests with questions about attending should WhatsApp the family.');
+  lines.push(`RSVP: guests RSVP on the RSVP page (/rsvp). They fill in a short form (name, attending or not, number of guests, which functions, arrival) and it opens WhatsApp with the reply ready to send to the family at ${wa(config.rsvp.whatsapp)}.`);
   const themed = config.events.filter((e) => e.dress);
   lines.push(`DRESS CODE: only ${themed.map((e) => `the ${en(e.name)} ("${en(e.dress.title)}": ${en(e.dress.note)} Women: ${en(e.dress.women)}. Men: ${en(e.dress.men)}.)`).join(' and ')} has a theme. Every other function has NO dress code; guests can wear whatever they like.`);
   lines.push('', 'VENUES:');
@@ -33,7 +33,7 @@ export function buildKnowledge(config) {
   lines.push('', 'FAQ:');
   for (const f of config.travel.faq) lines.push(`- Q: ${en(f.q)} A: ${en(f.a)}`);
   lines.push('', `WEATHER: typically ${config.weather.typical.highC}°C by day, ${config.weather.typical.lowC}°C at night. ${en(config.weather.typical.note)}`);
-  lines.push('SITE PAGES: Home, Events (/events), Dress code (/style), Travel (/travel), Our story (/story), Families (/family).');
+  lines.push('SITE PAGES: Home, RSVP (/rsvp), Events (/events), Dress code (/style), Travel (/travel), Our story (/story), Families (/family).');
   return lines.join('\n');
 }
 

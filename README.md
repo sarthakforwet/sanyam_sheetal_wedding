@@ -4,7 +4,9 @@ A mobile-first wedding website for Sanyam and Sheetal's two-day wedding at Radha
 
 The look follows the family's invitation site: a "velvet theatre" theme with night and wine backgrounds, gold Playfair Display headings, Poppins body text, cream "paper" cards with lace edges, and the pre-wedding photos.
 
-The site is fully public: everyone with the link sees every function. There are no personal invite links, logins, RSVP, admin area or database. All content comes from the config file.
+The site is fully public: everyone with the link sees every function. There are no personal invite links, logins, admin area or database. All content comes from the config file.
+
+**RSVP** (`/rsvp`, linked from the hero, a home-page banner, the highlighted centre button of the bottom bar and the footer): guests fill in a short form (name, attending or not, number of guests, which functions, arrival) and it opens WhatsApp with a formatted reply addressed to `rsvp.whatsapp` in `config/wedding.js`. Nothing is stored on the server; replies arrive in that WhatsApp chat. The form closes automatically once the wedding is over.
 
 ## Quick start
 

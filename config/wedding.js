@@ -83,6 +83,8 @@ export default {
   },
   // "For any queries" numbers, shown with Call / WhatsApp buttons
   contacts: ['+919406623152', '+919407147850'],
+  // RSVPs open WhatsApp with a prefilled message to this number
+  rsvp: { whatsapp: '+919406623152' },
 
   location: { lat: 22.6766, lng: 75.8789 },
   weather: {

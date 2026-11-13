@@ -3,6 +3,8 @@ import { layout, shareUrl } from '../layout.js';
 import { icon, mandala, seal, diya, divider } from '../motifs.js';
 import { pageHead, eventStyle, contactsCard } from '../components.js';
 import { programmeCard } from './info.js';
+import { rsvpBanner } from './rsvp.js';
+import { rsvpOpen } from '../../lib/rsvp.js';
 
 function countdownParts(target, now) {
   let s = Math.max(0, Math.floor((new Date(target).getTime() - now) / 1000));
@@ -78,8 +80,8 @@ function countdown(c) {
   ${diya}
   <p class="hero-tag">${c.config.hashtag}</p>
   <div class="hero-actions">
-    <a class="btn btn-primary" href="/events">${icon('calendar')}<span>${t('all_events')}</span></a>
-    <a class="btn btn-ghost" href="/style">${icon('style')}<span>${t('nav_style')}</span></a>
+    <a class="btn btn-primary btn-lg" href="/rsvp">${icon('rsvp')}<span>${t('rsvp_cta')}</span></a>
+    <a class="btn btn-ghost" href="/events">${icon('calendar')}<span>${t('all_events')}</span></a>
   </div>
   <button type="button" class="link-btn replay-invite" hidden>${t('replay_invite')}</button>
 </section>`;
@@ -143,6 +145,7 @@ ${c.mode === 'upcoming' ? countdown(c) : ''}
   ${liveEvent ? html`<p class="live-banner" ${eventStyle(liveEvent)}>${icon(liveEvent.icon)} ${t('happening_now', { event: tr(liveEvent.name) })}</p>`
     : upNext && c.mode === 'live' ? html`<p class="live-banner" ${eventStyle(upNext)}>${icon(upNext.icon)} ${t('up_next', { event: tr(upNext.name) })}</p>` : ''}
 </div>
+${rsvpOpen(c.mode) ? rsvpBanner(c) : ''}
 ${programmeCard(c, events, { link: true })}
 ${venueBlock(c)}
 ${momentsReel(c)}

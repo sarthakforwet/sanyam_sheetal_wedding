@@ -3,6 +3,7 @@
 
 import { html, raw, jsonForScript } from '../lib/html.js';
 import { icon, seal, mandala } from './motifs.js';
+import { rsvpOpen } from '../lib/rsvp.js';
 
 const FONTS = {
   en: 'https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&family=Poppins:wght@300;400;500;600&display=swap',
@@ -20,6 +21,7 @@ const CLIENT_KEYS = [
 export function navItems(c) {
   const all = [
     { href: '/', key: 'nav_home', icon: 'home' },
+    rsvpOpen(c.mode) && { href: '/rsvp', key: 'nav_rsvp', icon: 'rsvp' },
     { href: '/events', key: 'nav_events', icon: 'calendar' },
     { href: '/style', key: 'nav_style', icon: 'style' },
     { href: '/travel', key: 'nav_travel', icon: 'plane' },
@@ -37,7 +39,8 @@ export function shareUrl(c) {
     hashtag: c.config.hashtag,
     url: c.baseUrl + '/',
   });
-  return `https://wa.me/?text=${encodeURIComponent(text)}`;
+  // api.whatsapp.com rather than wa.me: wa.me's redirect turns emoji into "�"
+  return `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
 }
 
 export function layout(c, { title, body, page = '', noindex = false, description, bodyClass = '' }) {
@@ -46,7 +49,10 @@ export function layout(c, { title, body, page = '', noindex = false, description
   const fullTitle = title ? `${title} · ${names}` : `${names} · ${config.hashtag}`;
   const desc = description || `${tr(config.dateRange)} · ${tr(config.city)} · ${config.hashtag}`;
   const robots = noindex || !config.indexable ? 'noindex, nofollow' : 'index, follow';
-  const bottom = [['/', 'nav_home', 'home'], ['/events', 'nav_events', 'calendar'], ['/story', 'nav_story', 'heart'], ['/family', 'nav_family', 'family']];
+  // RSVP sits in the middle of the bar, highlighted, until the wedding is over
+  const bottom = rsvpOpen(c.mode)
+    ? [['/', 'nav_home', 'home'], ['/events', 'nav_events', 'calendar'], ['/rsvp', 'nav_rsvp', 'rsvp'], ['/story', 'nav_story', 'heart']]
+    : [['/', 'nav_home', 'home'], ['/events', 'nav_events', 'calendar'], ['/story', 'nav_story', 'heart'], ['/family', 'nav_family', 'family']];
   const isCurrent = (href) => (href === '/' ? c.path === '/' : c.path.startsWith(href));
   const otherLang = lang === 'en' ? 'hi' : 'en';
   const strings = Object.fromEntries(CLIENT_KEYS.map((k) => [k, t(k)]));
@@ -103,12 +109,12 @@ ${body}
   ${mandala('footer-mandala')}
   <p class="footer-names">${names}</p>
   <p class="footer-tag">${config.hashtag}</p>
-  <p><a class="btn btn-whatsapp" href="${shareUrl(c)}" target="_blank" rel="noopener">${icon('whatsapp')}<span>${t('share_whatsapp')}</span></a></p>
+  <p class="footer-ctas">${rsvpOpen(c.mode) ? html`<a class="btn btn-primary" href="/rsvp">${icon('rsvp')}<span>${t('rsvp_cta')}</span></a>` : ''}<a class="btn btn-whatsapp" href="${shareUrl(c)}" target="_blank" rel="noopener">${icon('whatsapp')}<span>${t('share_whatsapp')}</span></a></p>
   <p class="footer-small">${t('made_with_love')}</p>
 </footer>
 
 <nav class="bottom-nav" aria-label="${t('nav_menu')}">
-  ${bottom.map(([href, key, ic]) => html`<a href="${href}" ${isCurrent(href) ? raw('aria-current="page"') : ''}>${icon(ic)}<span>${t(key)}</span></a>`)}
+  ${bottom.map(([href, key, ic]) => html`<a href="${href}" ${href === '/rsvp' ? raw('class="nav-rsvp"') : ''} ${isCurrent(href) ? raw('aria-current="page"') : ''}>${href === '/rsvp' ? html`<span class="nav-rsvp-dot">${icon(ic)}</span>` : icon(ic)}<span>${t(key)}</span></a>`)}
   <button type="button" class="more-btn" aria-haspopup="dialog" aria-controls="more-sheet">${icon('menu')}<span>${t('nav_more')}</span></button>
 </nav>
 

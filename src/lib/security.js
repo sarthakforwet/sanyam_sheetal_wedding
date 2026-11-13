@@ -19,7 +19,8 @@ export function securityHeaders({ https = false } = {}) {
         "connect-src 'self'",
         'frame-src https://open.spotify.com https://www.youtube-nocookie.com https://www.youtube.com https://www.google.com',
         "base-uri 'self'",
-        "form-action 'self'",
+        // RSVP submits to /rsvp, which redirects to WhatsApp
+        "form-action 'self' https://wa.me https://api.whatsapp.com",
         "frame-ancestors 'none'",
         "object-src 'none'",
       ].join('; '),

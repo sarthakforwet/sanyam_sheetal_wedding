@@ -7,6 +7,8 @@ import { qrSvg } from '../lib/qr.js';
 import { homePage, thankYouPage, notFoundPage } from '../views/pages/home.js';
 import { eventsPage, stylePage, travelPage } from '../views/pages/info.js';
 import { storyPage, familyPage } from '../views/pages/content.js';
+import { rsvpPage } from '../views/pages/rsvp.js';
+import { validateRsvp, rsvpMessage, whatsappUrl, rsvpOpen } from '../lib/rsvp.js';
 
 const send = (res, page, status = 200) => res.status(status).type('html').send(String(page));
 
@@ -39,6 +41,20 @@ export function siteRoutes(app, deps) {
   app.get('/travel', (req, res) => send(res, travelPage(res.locals.c)));
   app.get('/story', (req, res) => send(res, storyPage(res.locals.c)));
   app.get('/family', (req, res) => send(res, familyPage(res.locals.c)));
+
+  // ── RSVP (by WhatsApp; nothing is stored) ───────────────────────────────
+  app.get('/rsvp', (req, res) => {
+    const c = res.locals.c;
+    send(res, rsvpPage(c, { events, open: rsvpOpen(c.mode) }));
+  });
+
+  app.post('/rsvp', (req, res) => {
+    const c = res.locals.c;
+    if (!rsvpOpen(c.mode)) return send(res, rsvpPage(c, { events, open: false }), 403);
+    const { ok, value, errors } = validateRsvp(req.body, config);
+    if (!ok) return send(res, rsvpPage(c, { events, values: value, errors }), 422);
+    res.redirect(303, whatsappUrl(config.rsvp.whatsapp, rsvpMessage(value, c)));
+  });
 
   // ── Calendar files ──────────────────────────────────────────────────────
   app.get('/cal/:file', (req, res) => {

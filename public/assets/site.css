@@ -577,3 +577,47 @@ input:focus, select:focus, textarea:focus { outline: 2px solid var(--crimson); o
   .js .reveal { opacity: 1; transform: none; }
 }
 .prog-more { margin: 26px 0 0; }
+
+/* ── RSVP ────────────────────────────────────────────────────────────────── */
+/* Highlighted RSVP tab: a raised gold circle in the middle of the bottom bar */
+.bottom-nav .nav-rsvp { color: var(--gold); }
+.nav-rsvp-dot { display: grid; place-items: center; width: 46px; height: 46px; margin-top: -22px; border-radius: 50%; background: var(--gold-grad); color: #3A0C10; box-shadow: 0 0 0 4px var(--night), 0 6px 16px rgba(216, 181, 110, .35); }
+.nav-rsvp-dot .icon { width: 22px; height: 22px; }
+.bottom-nav .nav-rsvp[aria-current="page"]::before { display: none; }
+.bottom-nav .nav-rsvp span:last-child { font-weight: 600; }
+
+/* Home banner */
+.rsvp-banner { padding: 34px 16px 10px; }
+.rsvp-banner-inner { position: relative; max-width: 560px; margin: 0 auto; text-align: center; padding: 30px 22px 28px; border-radius: 6px;
+  background: radial-gradient(120% 90% at 50% 0%, #7E1420, #3A0509 70%); border: 1px solid rgba(216, 181, 110, .55); box-shadow: 0 0 0 6px var(--night), 0 0 0 7px rgba(216, 181, 110, .3), var(--shadow); }
+.rsvp-banner-inner .icon-lg { margin: 0 auto 8px; color: var(--gold); }
+.rsvp-banner h2 { color: var(--gold); margin-bottom: 6px; }
+.rsvp-banner p { color: var(--text); margin: 0 auto 18px; max-width: 34ch; }
+
+/* Form */
+.rsvp-card { padding: 28px 22px 24px; }
+.rsvp-alert { background: #FBE6E6; color: #8A1C1C; border: 1px solid #E8B4BA; border-radius: 8px; padding: 12px 14px; font-weight: 600; }
+.field { display: grid; gap: 6px; margin: 16px 0; border: 0; padding: 0; min-width: 0; }
+.field > label:not(.check), .field > .label, .field > legend { font-size: .74rem; letter-spacing: .14em; text-transform: uppercase; color: var(--gold-ink); font-weight: 600; padding: 0; margin-bottom: 2px; }
+.lang-hi .field > label:not(.check), .lang-hi .field > .label, .lang-hi .field > legend { letter-spacing: 0; text-transform: none; font-size: .98rem; }
+.field-error { color: #9B1C1C; font-weight: 600; font-size: .92rem; margin: 2px 0 0; }
+[aria-invalid="true"] { border-color: #B3242F !important; }
+.row-2 { display: grid; gap: 0 14px; }
+@media (min-width: 560px) { .row-2 { grid-template-columns: 1fr 1fr; } }
+.rsvp-card select { appearance: none; background: var(--field-bg) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23A87E36' stroke-width='1.5'/%3E%3C/svg%3E") right 14px center no-repeat; padding-right: 36px; }
+.stepper { display: flex; align-items: center; gap: 10px; }
+.stepper input { max-width: 110px; text-align: center; font-family: var(--head); font-size: 1.5rem; font-weight: 600; }
+.step { width: 48px; height: 48px; border-radius: 50%; border: 1px solid var(--paper-ink); background: transparent; color: var(--paper-ink); font-size: 1.4rem; line-height: 1; cursor: pointer; }
+.quick { display: flex; flex-wrap: wrap; gap: 4px 14px; margin-bottom: 2px; }
+.quick .link-btn { color: var(--gold-ink); padding: 6px 0; min-height: 36px; font-size: .92rem; }
+.rsvp-day { margin: 12px 0 0; font-size: .74rem; letter-spacing: .14em; text-transform: uppercase; color: var(--gold-ink); font-weight: 600; }
+.lang-hi .rsvp-day { letter-spacing: 0; text-transform: none; font-size: .95rem; }
+.rsvp-events .check span { color: var(--ev-ink); font-weight: 500; }
+.rsvp-events .check small { font-weight: 400; }
+/* Hide the attendance details when "Sorry, can't come" is chosen (no JS needed) */
+.rsvp-card:has(input[name="attending"][value="no"]:checked) .yes-only { display: none; }
+.rsvp-send { width: 100%; margin-top: 8px; }
+.rsvp-card .hint { margin-top: 12px; }
+.footer-ctas { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+/* Chosen functions stay readable (the packing list strikes ticked items through) */
+.rsvp-events .check input:checked + span { text-decoration: none; color: var(--ev-ink); }

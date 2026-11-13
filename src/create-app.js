@@ -61,6 +61,7 @@ export function createApp({
   app.use('/assets', express.static(path.join(PUBLIC_DIR, 'assets'), { maxAge: '365d', immutable: true, index: false }));
   app.use(express.static(PUBLIC_DIR, { maxAge: '1d', index: false }));
 
+  app.use(express.urlencoded({ extended: false, limit: '16kb', parameterLimit: 50 }));
   app.use(express.json({ limit: '32kb' }));
   app.use(sameOrigin());
 

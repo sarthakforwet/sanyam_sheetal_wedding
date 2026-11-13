@@ -354,6 +354,30 @@
     }));
   }
 
+  // ── RSVP form: number stepper and quick function pickers ───────────────
+  function initRsvp() {
+    const form = $('form[data-rsvp]');
+    if (!form) return;
+    const count = $('input[name="count"]', form);
+    $$('[data-step]', form).forEach((b) => {
+      b.hidden = false;
+      b.addEventListener('click', () => {
+        const n = Math.min(30, Math.max(1, (Number.parseInt(count.value, 10) || 1) + Number(b.dataset.step)));
+        count.value = String(n);
+      });
+    });
+    const quick = $('.quick', form);
+    if (quick) {
+      quick.hidden = false;
+      const boxes = $$('input[name="events"]', form);
+      quick.addEventListener('click', (e) => {
+        const pick = e.target.closest('[data-pick]')?.dataset.pick;
+        if (!pick) return;
+        boxes.forEach((b) => { b.checked = pick === 'all' || b.dataset.day === pick; });
+      });
+    }
+  }
+
   // ── AI concierge ───────────────────────────────────────────────────────
   function initConcierge() {
     const wrap = $('[data-concierge]');
@@ -427,6 +451,7 @@
     initPacking();
     initWeather();
     initCopy();
+    initRsvp();
     initConcierge();
   };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', ready);

@@ -29,15 +29,15 @@ describe('public site', () => {
     assert.match(html, /#ShyamsavereWithU/);
   });
 
-  test('removed features are gone: invites, passes, check-in, admin, RSVP, uploads, extras', async () => {
+  test('removed features are gone: invites, passes, check-in, admin, uploads, extras', async () => {
     const gone = ['/i/abc123', '/logout', '/pass', '/pass.png', '/c/abc123', '/admin', '/admin/login', '/admin/guests',
-      '/admin/checkin', '/rsvp', '/photos', '/media/u/x.webp', '/gifts', '/games', '/blessings', '/sangeet'];
+      '/admin/checkin', '/photos', '/media/u/x.webp', '/gifts', '/games', '/blessings', '/sangeet'];
     for (const p of gone) assert.equal((await t.request(p)).status, 404, p);
     for (const p of ['/api/rsvp', '/api/uploads', '/api/blessings', '/admin/login']) {
       assert.equal((await t.request(p, { method: 'POST', body: '{}', headers: { 'Content-Type': 'application/json' } })).status, 404, p);
     }
     const html = await (await t.request('/')).text();
-    for (const href of ['/pass', '/rsvp', '/photos', '/admin', '/gifts', '/games', '/blessings', '/sangeet']) assert.ok(!html.includes(`href="${href}"`), href);
+    for (const href of ['/pass', '/photos', '/admin', '/gifts', '/games', '/blessings', '/sangeet']) assert.ok(!html.includes(`href="${href}"`), href);
   });
 
   test('pages carry no removed text: theme label, old number, invited-by card', async () => {
