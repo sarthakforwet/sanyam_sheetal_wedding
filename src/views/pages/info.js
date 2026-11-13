@@ -7,11 +7,17 @@ import { pageHead, eventCard, eventStyle, moodBoard, contactsCard } from '../com
 import { fmtDate, fmtShortDate, fmtTime } from '../../lib/time.js';
 import { programme, dressFor } from '../../lib/visibility.js';
 
-// Cream "programme card" with lace edges: time | function, day by day
+// "The Celebrations": cream paper panel with lace edges and a card per
+// function (plus slim cards for meals), grouped by day
 export function programmeCard(c, events, { link = false } = {}) {
   const { t, tr, lang, config } = c;
   const days = programme(config, events);
   if (!days.length) return '';
+  const time = (iso) => {
+    if (lang === 'hi') return html`${fmtTime(iso, 'hi')}`;
+    const [hm, ampm] = fmtTime(iso, 'en').split(' ');
+    return html`${hm}<small>${ampm.toUpperCase()}</small>`;
+  };
   return html`
 <section class="paper" aria-labelledby="prog-h">
   <div class="lace top" aria-hidden="true"></div>
@@ -19,15 +25,21 @@ export function programmeCard(c, events, { link = false } = {}) {
     <h2 class="sec-title" id="prog-h">${t('programme_title')}</h2>
     ${days.map((d) => html`
     <div class="day">
-      <p class="day-h">${fmtDate(`${d.date}T12:00:00+05:30`, lang)}</p>
-      <ol class="tl">
-        ${d.items.map((it) => {
-          const [time, ampm] = fmtTime(it.time, 'en').split(' ');
-          return html`<li ${it.event ? eventStyle(it.event) : ''}>
-            <div class="t">${lang === 'hi' ? fmtTime(it.time, 'hi') : time}${lang === 'hi' ? '' : html`<small>${ampm.toUpperCase()}</small>`}</div>
-            <div class="ev">${it.event ? html`<a href="${link ? '/events' : ''}#ev-${it.event.id}"><b>${tr(it.name)}</b></a>` : html`<b>${tr(it.name)}</b>`}${it.tagline ? html`<span>${tr(it.tagline)}</span>` : ''}</div>
-          </li>`;
-        })}
+      <h3 class="day-h">${fmtDate(`${d.date}T12:00:00+05:30`, lang)}</h3>
+      <ol class="prog-cards">
+        ${d.items.map((it) => (it.event
+          ? html`<li class="prog-card" ${eventStyle(it.event)}>
+            <a href="${link ? '/events' : ''}#ev-${it.event.id}">
+              <span class="pc-top"><span class="pc-icon">${icon(it.event.icon)}</span><span class="pc-time">${time(it.time)}</span></span>
+              <span class="pc-name">${tr(it.name)}</span>
+              ${it.tagline ? html`<span class="pc-tag">${tr(it.tagline)}</span>` : ''}
+              <span class="pc-more">${t('details')} →</span>
+            </a>
+          </li>`
+          : html`<li class="prog-card meal">
+            <span class="pc-top"><span class="pc-time">${time(it.time)}</span></span>
+            <span class="pc-name">${tr(it.name)}</span>
+          </li>`))}
       </ol>
     </div>`)}
     ${link ? html`<p class="center prog-more"><a class="btn btn-line" href="/events">${t('all_events')} →</a></p>` : ''}
