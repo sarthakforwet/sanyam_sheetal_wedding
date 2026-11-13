@@ -51,6 +51,12 @@ describe('public site', () => {
     }
   });
 
+  test('the family page puts customs to look out for above the families', async () => {
+    const html = await (await t.request('/family')).text();
+    const customs = html.indexOf('Customs to look out for');
+    assert.ok(customs > 0 && customs < html.indexOf('id="fam-groom"') && customs < html.indexOf('id="fam-bride"'));
+  });
+
   test('the dress code is shown only for the Haldi Carnival', async () => {
     const events = await (await t.request('/events')).text();
     const cards = events.split('<article class="event-card').slice(1);

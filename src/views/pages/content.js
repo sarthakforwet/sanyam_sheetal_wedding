@@ -42,14 +42,14 @@ export function familyPage(c) {
   const body = html`
 <div class="container">
   ${pageHead(t('family_title'))}
+  ${config.families.filter((f) => f.customs).map((f) => html`<aside class="card custom">
+    <h3>${icon('heart')} ${t('family_customs')}</h3>
+    <p>${tr(f.customs)}</p>
+  </aside>`)}
   ${families.map((f) => html`
   <section class="family reveal" aria-labelledby="fam-${f.id}">
     <h2 id="fam-${f.id}" class="sec-title">${tr(f.title)}</h2>
     ${f.about ? html`<p class="lede center">${tr(f.about)}</p>` : ''}
-    ${f.customs ? html`<aside class="card custom">
-      <h3>${icon('heart')} ${t('family_customs')}</h3>
-      <p>${tr(f.customs)}</p>
-    </aside>` : ''}
     ${f.members?.length ? html`<h3 class="sub-title">${t('whos_who')}</h3>
     <ul class="people">
       ${f.members.map((m) => html`<li class="person">
